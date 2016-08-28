@@ -114,6 +114,7 @@ type LTokens map[string] Token
 
 // Save a list of Tokens
 func (ltok LTokens) Save(filename string) {
+    ltok.Purge() // Event-based purging
     js, _ := json.Marshal(ltok)
     ioutil.WriteFile(filename, js, 0644)
 }
@@ -122,6 +123,7 @@ func (ltok LTokens) Save(filename string) {
 func (ltok LTokens) Load(filename string) {
     js, _ := ioutil.ReadFile(filename)
     json.Unmarshal(js, &ltok)
+    ltok.Purge() // Event-based purging
 }
 
 // Add a Token to a list
@@ -492,7 +494,6 @@ func main() {
         }
         case "purge":
         ltok.Load(cnf.TOKEN_DB)
-        ltok.Purge()
         ltok.Save(cnf.TOKEN_DB)
     }
     return
